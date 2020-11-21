@@ -8,6 +8,8 @@ from .modulate import Modulation
 
 from .encoding import str_to_bin
 
+from .projects.normal_dist import KernelGenerator
+
 
 def add_white_noise(sig, k):
 
@@ -27,21 +29,29 @@ def add_white_noise(sig, k):
 
 def generate_dataset(n, size):
 
+    kg = KernelGenerator()
+
+    kg.start()
+
+    bias = kg.fastgen([0.1, 0.4, 0.3, 0.2])
+
+    bias = kg.setwindow(0, 0.5, bias)
+
     M = Modulation(frequency=8e3, bitrate=20)
-
-
 
     bin = {1:0,0:1}
 
-    dataset = []
+
+
+    streams = []
 
     names = []
+
+    final = []
 
     for k in range(n):
 
         data = []
-
-
 
         for i in range(size):
 
@@ -54,18 +64,24 @@ def generate_dataset(n, size):
 
         signal = M.modulate(data)
 
-        dataset.append(signal)
+        signal = add_white_noise(signal, np.random.choice(bias))
+
+        streams.append(signal)
 
         names.append(np.array(data))
 
-    dataset = np.array(dataset)
-    names = np.array(names)
+        data.append(signal)
 
-    print(dataset)
-    print(dataset.shape)
+        final.append(np.array(data))
 
-    print(names)
-    print(names.shape)
+    return np.array(final)
+
+    sig_data = np.array(streams)
+    sig_tag = np.array(names)
+
+    return sig_data, sig_tag
+
+
 
 
 
@@ -75,7 +91,29 @@ def generate_dataset(n, size):
 
 def test():
 
-    generate_dataset(20, 5)
+    # dataset, tags = generate_dataset(1, 5)
+    #
+    # print(dataset)
+    # print(dataset.shape)
+    #
+    # print(tags)
+    # print(tags.shape)
+
+    dataset = generate_dataset(1, 5)
+
+    print(dataset)
+    print(dataset.shape)
+
+    return
+
+
+
+    import matplotlib.pyplot as plt
+
+    plt.specgram(dataset[-1])
+    plt.show()
+
+
     return
 
     M = Modulation(frequency=8e3, bitrate=20)
