@@ -1,0 +1,9 @@
+This is the TODO file for the modem.
+
+generate easy modulation
+
+1D clustering segmentation, usage deeplearning.
+
+save everything to buffer
+
+save results to file
