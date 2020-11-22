@@ -1,6 +1,4 @@
-# dlam
-
-***WARNING EVERYTHING SEEN HERE IS UNDER DEVELOPMENT AND (MIGHT) CHANGE IN THE FUTURE***
+# Modem
 
 
 This is a Python implementation of a **Deep Learning Acoustic Modem** for my third year final degree project in Engineering Science and Technology, *(Teknikvetenskap)*. *(2020-2021)*
@@ -11,9 +9,10 @@ This program aims at reinventing the **Acoustic coupler modem** defined as [1]:
 
 By utilizing modern computational power, this modem will ***[SOON]*** be able to transfer data faster than previous semi hardware/software modems by approaching the demodulation process in a *human-like* manner.
 
-
+Theoretical transfer speeds does not directly justify this pure software implementation, however it does indirectly justify the development of demodulation technologies that could be implemented for increased *safety, transfer-speed* and reduced *error-rate*.
 
 ## Methods
+Methods powering the modem are the following:
 
 * **Deep Temporal Clustering (DTC)** Using Autocorrelation. Developed by **FlorentF9** *(https://github.com/FlorentF9/)* based on [2]:
 
@@ -23,13 +22,24 @@ By utilizing modern computational power, this modem will ***[SOON]*** be able to
 
 * **Deep Segmentation** using Hidden Markov Models
 
+* **Sound Activity Segmentation** using Support Vector Machines (SVM) utilizing an implemented version of silence removal from pyAudioAnalysis. Developed by **Theodoros Giannakopoulos** *(https://github.com/tyiannak/pyAudioAnalysis/)*
+> @article{giannakopoulos2015pyaudioanalysis,
+    title={pyAudioAnalysis: An Open-Source Python Library for Audio Signal Analysis},
+    author={Giannakopoulos, Theodoros},
+    journal={PloS one},
+    volume={10},
+    number={12},
+    year={2015},
+    publisher={Public Library of Science}
+  }
+
 ## Background
 
 Transfer speed and loss reduction finds itself in constant improvement in **Digital Communications**. The medium in which data used to be transfered in, air is now more or less obsolete for data transfer in favour of less lossier, and faster wireless radio communication, *Wi-Fi*, *Li-Fi*. My proposal to the growing bandwidth problem is to utilize deep adaptive technologies such as deep learning for data transfer optimization, on the fly. Protocols for Wi-FI are based on [3]:
 
 > IEEE 802.11 https://en.wikipedia.org/wiki/IEEE_802.11
 
-However as a ToC (Test of Concept), no initial human-like protocols are being set, the modem will itself define rules of communication during training and synchronization in production. Benefits are:
+However as a PoC (Proof of Concept), no initial human-like protocols are being set, the modem will itself define rules of communication during training and synchronization in production. Benefits are:
 
 * ***Rules can change*** during transfer, not just change of rules to adapt for outside interference.
 
@@ -45,13 +55,19 @@ However as a ToC (Test of Concept), no initial human-like protocols are being se
 Clone the modem using **git clone**:
 
 ```
-$ git clone https://github.com/Irreq/dlam.git
+$ git clone https://github.com/Irreq/gyarbete.git
 ```
 
-You can ***[SOON]*** install the modem with **pip** and **PyPI**:
+Install requirements using **pip**:
 
 ```
-$ pip3 install dlam
+$ pip3 install requirements.txt
+```
+
+Install the program using **pip**:
+
+```
+$ pip3 install .
 ```
 
 
@@ -77,6 +93,19 @@ Here, ```Demodulate``` tells the modem to process the wave file ```received_wave
 ## Dependencies
 
     matplotlib, scipy, numpy, pyaudio, pydub, scikit-learn, keras, tensorflow
+
+
+## Credits
+
+Special thanks to the following people for making this possible.
+
+* David Masse *(https://github.com/davidmasse/neural-net-1D-audio)*
+
+* Theodoros Giannakopoulos *(https://github.com/tyiannak/pyAudioAnalysis/)*
+
+* Harrison Kinsley *(https://pythonprogramming.net/)*
+
+* Florent Forest *(https://github.com/FlorentF9/)*
 
 ## References
 
