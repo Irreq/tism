@@ -6,8 +6,10 @@
 # Author : Irreq
 
 """
-    Encoding for data
-    some code has been borrowed, see below
+DOCUMENTATION:          Encoding for data some code has been
+                        borrowed, see below.
+
+TODO:                   Add more modulation schemes.
 """
 
 
@@ -107,15 +109,34 @@ class Manchester(object):
 
 # =============== End Borrowed Code ======================
 
+# =============== Start Written Code =====================
+
 def str_to_bin(data_string, encoding=False):
 
     """
-    String to Binary String Converter Function
+    Turn a regular string into a binary string.
 
-     data_string : str()
-        encoding : Boolean
+    NOTE:     The function converts letters,
+              numbers and special characters
+              to their binary equivalent.
+              Encoding schemes can be entered.
 
-         returns : str()
+    ARGUMENTS:
+        - data_string:  str() representing the data
+                        that will be converted to binary.
+                        Eg, "Hello, World!"
+
+    KEYWORD ARGUMENTS:
+        - encoding:     str() or Boolean() representing
+                        the encoding scheme. If encoding is
+                        True, encoding scheme will be set
+                        automatically. Eg, "manchester"
+
+    RETURNS:
+        - binary:       str() converted binary string.
+
+    TODO:     Fix that encoding scheme can be chosen using
+              string.
     """
 
     binary = "".join(f"{ord(i):08b}" for i in data_string) # String to binary conversion
@@ -129,12 +150,28 @@ def str_to_bin(data_string, encoding=False):
 def bin_to_str(data_string, encoding=False):
 
     """
-    Binary String to String Converter Function
+    Turn a binary string into a regular string.
 
-     data_string : str()
-        encoding : Boolean
+    NOTE:     The function converts binary strings
+              to their letter, number and special character
+              equivalent. Encoding schemes can be entered.
 
-         returns : str()
+    ARGUMENTS:
+        - data_string:  str() representing the data
+                        that will be converted to normal.
+                        Eg, "010101010101010110101011"
+
+    KEYWORD ARGUMENTS:
+        - encoding:     str() or Boolean() representing
+                        the encoding scheme. If encoding is
+                        True, encoding scheme will be set
+                        automatically. Eg, "manchester"
+
+    RETURNS:
+        - binary:       str() converted normal string.
+
+    TODO:     Fix that encoding scheme can be chosen using
+              string.
     """
 
     if encoding:
@@ -142,3 +179,5 @@ def bin_to_str(data_string, encoding=False):
         data = Manchester(differential=True).decode(data_string)
 
     return ''.join(chr(int(data[i*8:i*8+8],2)) for i in range(len(data)//8))
+
+# ================ End Written Code =====================

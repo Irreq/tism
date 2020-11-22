@@ -6,8 +6,11 @@
 # Author : Irreq
 
 """
-    Modulation of string or binary list to
-    amplitude modulated sinusoidal signal
+DOCUMENTATION:          Modulation of string or binary sequence to
+                        signal.
+
+TODO:                   Add more modulation schemes and comment
+                        the program for easier readability.
 """
 
 import numpy as np
@@ -21,16 +24,44 @@ from .encoding import str_to_bin
 class Modulation(object):
 
     def __init__(self, frequency=1e3, samplingrate=44.1e3,
-                        bitrate=10, amplitude=0.5, encoding=True):
+                        bitrate=10, amplitude=1.0, encoding=True):
 
         """
-            frequency : the frequency of the signal
-         samplingrate : the samplingrate, prefferably 44.1kHz
-              bitrate : float or integer
-            amplitude : prefferably <= 2.0
-             encoding : Boolean
+        Class for data modulation.
 
+        NOTE:     At the moment, only amplitude modulation
+                  with manchester code is availible.
 
+        ARGUMENTS:
+                                 None
+
+        KEYWORD ARGUMENTS:
+            - frequency:         int() or float() representing carrier
+                                 frequency in Hz. Eg, 1e3 (1000Hz)
+
+            - samplingrate:      int() or float() representing the
+                                 samplingrate for the modulation scheme.
+                                 Eg, 44.1e3 (44100Hz, CD quality)
+
+            - bitrate:           int() or float() representing transfer
+                                 speed of bits per second. - meaning
+                                 how many ones or zeros are in one second.
+                                 Eg, 10
+
+            - amplitude:         int() or float() representing amplitude
+                                 of signal. Integers are discouraged as
+                                 1 represent max value. If amplitude is
+                                 greater, signal loss or other errors will
+                                 occur in the physical world. Amplitude is
+                                 usually 0 <= amplitude <= 1. Eg, 0.9
+
+            - encoding:          str() or Boolean() representing the
+                                 encoding scheme that will be used for
+                                 the modulation. If encoding is set to True
+                                 scheme will be chosen automatically.
+                                 Eg, "manchester"
+
+        TODO:     None
         """
 
         assert float(frequency) > 0
@@ -51,39 +82,69 @@ class Modulation(object):
     def sine_wave_generator(self, duration):
 
         """
-        Sinusoidal Wave Generating Function
+        Generate a sinusoidal wave.
 
-            duration : second(s)
+        Note:     This function can be used for any type of sinusoidal-like
+                  signal, and not exclusively amplitude modulation.
 
-             returns : numpy.array() #sine wave
+        ARGUMENTS:
+            - duration:          float() or int() representing duration in
+                                 seconds. Eg, 2.42
+
+        RETURNS:
+            - sinusoidal_wave:   numpy.array() the created sinusoidal wave.
+
+        TODO:     Fix that other types of inputs can be used, and not only in
+                  seconds.
         """
 
         # Generates from 0 to 1/Fbit with steps from fs
 
-        arranged = np.arange(0, duration, 1/self.samplingrate, dtype=np.float)
+        timesteps = np.arange(0, duration, 1/self.samplingrate, dtype=np.float)
 
         # Carrier wave
 
-        sinusoidal_wave = np.sin(2 * np.pi * self.frequency * arranged)
+        sinusoidal_wave = np.sin(2 * np.pi * self.frequency * timesteps)
 
         return sinusoidal_wave
 
     def smooth(self, data, n, curve=0.05):
 
         """
-        Frequency Change Damping Function
+        Make smooth transitions between numbers in a sequence.
 
-        Smooths signal so the speakers won't break on frequency change
+        NOTE:     This function is used for generate a smooth
+                  transition between the binary integers in the
+                  incoming data such that the loudspeaker will
+                  have more smoother envelope without abrubt
+                  changes. However this function needs to create
+                  data. Eg, [0 1 0] with multiplication 2 becomes:
+                  [0 0.2 0.8 1 0.8 0.2 0]
 
-           data : list
-              n : the factor of multiplication
-          curve : higher value results in smoother curve
+        ARGUMENTS:
+            - data:         list() or numpy.array() (Usually)
+                            The sequence that will be manipulated.
+                            Eg, "Hello, World!"
 
-        returns : list #magnified ~n times
+            - n:            int() multiplication factor representing
+                            number of resolution.
+                            Eg, 100
+
+        KEYWORD ARGUMENTS:
+            -curve:         float() the smoothness of the change
+                            a higher value result in a flatter change.
+                            Eg, 0.05
+
+        RETURNS:
+            - smoothed:     list() The smoothed out sequnce.
+
+        TODO:     The function uses some werid parsing when multiplying
+                  the values, thus it has to be split as follows.
+                  This is a low priority bug.
+                  Ease readability by writing more "pythonic".
         """
 
-        # the function uses some werid parsing when multiplying the values,
-        # thus it has to be split as follows. This is a low priority bug.
+        # Bug below |V|
 
         data = [data[0], *data, data[-1]]
 
@@ -95,23 +156,35 @@ class Modulation(object):
 
             return x0 + (x1 - x0)*(1 - sigmaD)
 
-        result = [c for i in range(len(data)) if i+1 < len(data) for c in sigma(data[i],data[i+1])]
+        smoothed = [c for i in range(len(data)) if i+1 < len(data) for c in sigma(data[i],data[i+1])]
 
         start, end = int(np.floor(n/2)), int(np.ceil(n/2))
 
-        return result[start:-end]
+        return smoothed[start:-end]
 
 
     def modulate(self, payload):
 
         """
-        Amplitude Modulation Function
+        Modulate data into a signal.
 
-           payload : list
-          curve : higher value results in smoother curve
+        NOTE:     At the moment, only amplitude
+                  modulation is availible.
 
-        returns : numpy.array() #modulated signal
+        ARGUMENTS:
+            - payload:      str() or list() or numpy.array()
+                            this is the data that will be
+                            modulated.
+
+        RETURNS:
+            - carrier:      numpy.array() signal containing the
+                            modulated payload.
+
+        TODO:     Fix more modulation schemes and ease
+                  readability by writing more "pythonic".
         """
+
+        # Lower the amplitude
 
         if type(payload).__name__ == "str":
 
@@ -122,7 +195,9 @@ class Modulation(object):
 
         # data preprocessing
 
-        payload = [i if i==1 else self.amplitude for i in payload]
+        A = self.amplitude
+
+        payload = [i if i==A else A*0.5 for i in payload]
 
         bit_length = int(self.samplingrate / self.bitrate)
 
@@ -139,27 +214,3 @@ class Modulation(object):
         return carrier
 
 # ================= End Modulation =======================
-
-
-def test(debug=False):
-
-    try:
-        print(" Testing modulation")
-
-        # Test if the modulation is working
-
-        M = Modulation(frequency=8e3, bitrate=300)
-
-        sig = M.modulate('Hello, World!')
-
-        import matplotlib.pyplot as plt
-
-        if debug:
-
-            plt.plot(sig)
-            plt.show()
-
-        print("Finished modulation")
-
-    except:
-        print('  Broken modulation -- rebuild the program')
