@@ -1,5 +1,16 @@
-# Signal Generation
-# matplotlib inline
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# src/dataset.py
+
+# Author : Irreq
+
+"""
+DOCUMENTATION:          Generate dataset for training.
+
+TODO:                   Fix structure and ease readability and
+                        optimize for performance.
+"""
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +19,7 @@ from .modulate import Modulation
 
 from .encoding import str_to_bin
 
-from .projects.normal_dist import KernelGenerator
+from .normal import KernelGenerator
 
 
 def add_white_noise(sig, k):

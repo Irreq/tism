@@ -1,29 +1,15 @@
 #!/usr/bin/env python3
-
 # -*- coding: utf-8 -*-
 
-"""
-    Documentation
+# src/normal.py
 
-    A class for generating multi biased
-    distributions using Kernel Density Estimation (KDE)
+# Author : Irreq
 
 """
+DOCUMENTATION:          Generate a synthetic normal distribution.
 
+TODO:                   None
 """
-
-    TODO
-
-"""
-
-__author__ = "Isac Bruce"
-__copyright__ = "Copyright 2020, Irreq"
-__credits__ = ["Isac Bruce"]
-__license__ = "GPL"
-__version__ = "1.0.1"
-__maintainer__ = "Isac Bruce"
-__email__ = "irreq@protonmail.com"
-__status__ = "Production"
 
 
 import numpy as np
@@ -283,59 +269,3 @@ class KernelGenerator(object):
             final_distribution.extend(data)
 
         return np.array(final_distribution)
-
-def test():
-
-    """ Example showing a biased distribution """
-
-    import matplotlib.pyplot as plt
-
-    # I have chosen two distributions
-    # her, but you could use whatever
-    # you wan't
-
-    generic_bias_instructions = {
-
-        "medical_conditions" : [[0.0, 0.1],
-                                [0.72, 0.06],
-                                [1.0, 0.4],
-                                [0.35, 0.1],],
-
-        "random_distribution" : [[0.0, 0.1],
-                                 [0.72, 0.1],
-                                 [1.0, 0.4],
-                                 [0.35, 0.1],]
-    }
-
-    resolution = 5000
-
-    kg = KernelGenerator(size=resolution)
-
-    kg.start()
-
-    bias = kg.addbias(generic_bias_instructions)
-
-    nomdist = kg.setwindow(0,4,"normal_distribution")
-
-    nomdist = np.array(nomdist)
-
-    print('elements : {}\nmean : {}\nmax : {}\nmin : {}'.format(len(nomdist),np.mean(np.array(nomdist)), max(nomdist), min(nomdist)))
-
-
-
-    # To get all stored biases :
-
-    # bias = kg.getbias()
-
-    # plt.hist(np.array(bias["normal_distribution"]), bins=np.linspace(0,resolution)/resolution)
-    plt.hist(nomdist, bins=np.linspace(0,resolution)/resolution)
-
-    plt.show()
-
-
-
-
-
-if __name__ == '__main__':
-
-    test()

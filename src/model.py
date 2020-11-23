@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-# src/train.py
+# src/model.py
 
 # Author : Irreq
 
 """
-DOCUMENTATION:          Train the model.
+DOCUMENTATION:          Define the model.
 
 TODO:                   Everything.
                         Implement the CNN and fix the core of

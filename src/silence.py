@@ -1,18 +1,28 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+# src/silence.py
+
+# Author : Irreq
+
 """
-Partially modified code from pyAudioAnalysis:
+DOCUMENTATION:          Find silence in signal.
 
-https://github.com/tyiannak/pyAudioAnalysis
+                        Partially modified code from pyAudioAnalysis:
 
-@article{giannakopoulos2015pyaudioanalysis,
-  title={pyAudioAnalysis: An Open-Source Python Library for Audio Signal Analysis},
-  author={Giannakopoulos, Theodoros},
-  journal={PloS one},
-  volume={10},
-  number={12},
-  year={2015},
-  publisher={Public Library of Science}
-}
+                        https://github.com/tyiannak/pyAudioAnalysis
 
+                        @article{giannakopoulos2015pyaudioanalysis,
+                          title={pyAudioAnalysis: An Open-Source Python Library for Audio Signal Analysis},
+                          author={Giannakopoulos, Theodoros},
+                          journal={PloS one},
+                          volume={10},
+                          number={12},
+                          year={2015},
+                          publisher={Public Library of Science}
+                        }
+
+TODO:                   None
 """
 
 
