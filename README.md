@@ -1,5 +1,6 @@
 # Modem
 
+***Warning the Modem is under development and will probably not work until 20-12-2020***
 
 This is a Python implementation of a **Deep Learning Acoustic Modem** for my third year final degree project in Engineering Science and Technology, *(Teknikvetenskap)*. *(2020-2021)*
 
