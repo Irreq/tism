@@ -18,12 +18,34 @@ from sklearn.neighbors.kde import KernelDensity
 
 from scipy.signal import argrelextrema
 
+
+
 def constrained_sum_sample_pos(n, total):
-    """Return a randomly chosen list of n positive integers summing to total.
-    Each such list is equally likely to occur."""
+
+    """
+    Integer partitioning of random similar size.
+
+    NOTE:     Return a randomly chosen list of n positive
+              integers summing to total. Each such list is
+              equally likely to occur.
+    ARGUMENTS:
+        - n:                int() The number of groups of integer that
+                            together sums up to 'n'. Eg, 3
+
+        - total:            int() An integer which will be partitioned of
+                            random size. Eg, 17
+    RETURNS:
+        - partitioned:      list() A partition of size 'n' that sums up
+                            to 'total'. Eg, [7, 4, 6]
+
+    TODO:     None
+    """
 
     dividers = sorted(np.random.choice(range(1, total), n - 1))
-    return [a - b for a, b in zip(dividers + [total], [0] + dividers)]
+
+    partitioned = [a - b for a, b in zip(dividers + [total], [0] + dividers)]
+
+    return partitioned
 
 def constrained_sum_sample_nonneg(n, total):
     """Return a randomly chosen list of n nonnegative integers summing to total.
