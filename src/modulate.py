@@ -29,8 +29,8 @@ class Modulation(object):
         """
         Class for data modulation.
 
-        NOTE:     At the moment, only amplitude modulation
-                  with manchester code is availible.
+        NOTE:                    At the moment, only amplitude modulation
+                                 with manchester code is availible.
 
         ARGUMENTS:
                                  None
@@ -61,7 +61,7 @@ class Modulation(object):
                                  scheme will be chosen automatically.
                                  Eg, "manchester"
 
-        TODO:     None
+        TODO:                    None
         """
 
         assert float(frequency) > 0
@@ -84,8 +84,9 @@ class Modulation(object):
         """
         Generate a sinusoidal wave.
 
-        Note:     This function can be used for any type of sinusoidal-like
-                  signal, and not exclusively amplitude modulation.
+        Note:                    This function can be used for any type of
+                                 sinusoidal-like signal, and not exclusively
+                                 amplitude modulation.
 
         ARGUMENTS:
             - duration:          float() or int() representing duration in
@@ -94,8 +95,8 @@ class Modulation(object):
         RETURNS:
             - sinusoidal_wave:   numpy.array() the created sinusoidal wave.
 
-        TODO:     Fix that other types of inputs can be used, and not only in
-                  seconds.
+        TODO:                    Fix that other types of inputs can be used,
+                                 and not only in seconds.
         """
 
         # Generates from 0 to 1/Fbit with steps from fs
@@ -113,35 +114,35 @@ class Modulation(object):
         """
         Make smooth transitions between numbers in a sequence.
 
-        NOTE:     This function is used for generate a smooth
-                  transition between the binary integers in the
-                  incoming data such that the loudspeaker will
-                  have more smoother envelope without abrubt
-                  changes. However this function needs to create
-                  data. Eg, [0 1 0] with multiplication 2 becomes:
-                  [0 0.2 0.8 1 0.8 0.2 0]
+        NOTE:                   This function is used for generate a smooth
+                                transition between the binary integers in the
+                                incoming data such that the loudspeaker will
+                                have more smoother envelope without abrubt
+                                changes. However this function needs to create
+                                data. Eg, [0 1 0] with multiplication 2 becomes:
+                                [0 0.2 0.8 1 0.8 0.2 0]
 
         ARGUMENTS:
-            - data:         list() or numpy.array() (Usually)
-                            The sequence that will be manipulated.
-                            Eg, "Hello, World!"
+            - data:             list() or numpy.array() (Usually)
+                                The sequence that will be manipulated.
+                                Eg, "Hello, World!"
 
-            - n:            int() multiplication factor representing
-                            number of resolution.
-                            Eg, 100
+            - n:                int() multiplication factor representing
+                                number of resolution.
+                                Eg, 100
 
         KEYWORD ARGUMENTS:
-            -curve:         float() the smoothness of the change
-                            a higher value result in a flatter change.
-                            Eg, 0.05
+            -curve:             float() the smoothness of the change
+                                a higher value result in a flatter change.
+                                Eg, 0.05
 
         RETURNS:
-            - smoothed:     list() The smoothed out sequnce.
+            - smoothed:         list() The smoothed out sequnce.
 
-        TODO:     The function uses some werid parsing when multiplying
-                  the values, thus it has to be split as follows.
-                  This is a low priority bug.
-                  Ease readability by writing more "pythonic".
+        TODO:                   The function uses some werid parsing when
+                                multiplying the values, thus it has to be split
+                                as follows. This is a low priority bug.
+                                Ease readability by writing more "pythonic".
         """
 
         # Bug below |V|
@@ -168,20 +169,20 @@ class Modulation(object):
         """
         Modulate data into a signal.
 
-        NOTE:     At the moment, only amplitude
-                  modulation is availible.
+        NOTE:                   At the moment, only amplitude
+                                modulation is availible.
 
         ARGUMENTS:
-            - payload:      str() or list() or numpy.array()
-                            this is the data that will be
-                            modulated.
+            - payload:          str() or list() or numpy.array()
+                                this is the data that will be
+                                modulated.
 
         RETURNS:
-            - carrier:      numpy.array() signal containing the
-                            modulated payload.
+            - carrier:          numpy.array() signal containing the
+                                modulated payload.
 
-        TODO:     Fix more modulation schemes and ease
-                  readability by writing more "pythonic".
+        TODO:                   Fix more modulation schemes and ease
+                                readability by writing more "pythonic".
         """
 
         # Lower the amplitude

@@ -29,6 +29,8 @@ TODO:                   None
 
 import sys
 
+eps = sys.float_info.epsilon
+
 import numpy as np
 
 import scipy
@@ -39,8 +41,7 @@ import sklearn.svm
 from scipy.fftpack import fft
 from scipy.fftpack.realtransforms import dct
 
-
-eps = sys.float_info.epsilon
+# import cfg as buffer
 
 def smooth_moving_avg(signal, window=11): #done
     window = int(window)

@@ -1,0 +1,7 @@
+
+foo()
+
+
+def foo():
+
+    return

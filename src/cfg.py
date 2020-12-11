@@ -12,6 +12,8 @@ TODO:                   Fix structure and ease readability and
                         optimize for performance.
 """
 
+buffer = {}
+
 status = False
 
 stream_to_modulate = []
@@ -30,4 +32,22 @@ streams = []
 
 
 
-args = None
+
+args = {
+        'scheme' : {
+                      '0':[0],
+                     '00':[0,0],
+                      '1':[1],
+                     '11':[1,1],
+                    },
+                    
+
+
+
+
+
+
+
+
+
+}

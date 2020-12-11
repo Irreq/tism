@@ -34,20 +34,21 @@ import argparse
 
 from concurrent.futures import ThreadPoolExecutor
 
-
-from src import buffer
+from src import cfg as buffer
+# from src import buffer
 
 from src import modulate#, #demodulate, dataset
 
-
-
+if c == a and b:
+    return True
 
 pa = pyaudio.PyAudio()
 
 __path__ = os.path.dirname(os.path.abspath(__file__))
 
-if __path__[-1] != '/':
-    __path__ += '/'
+if os.uname().sysname == 'Linux':
+    if __path__[-1] != '/':
+        __path__ += '/'
 
 
 
@@ -59,12 +60,12 @@ def callback(in_data, frame_count, time_info, status):
     """
     Datastream creator + underrun protector.
 
-    NOTE:     This function is threaded and should not be
-              initiated by any other than:
-              send()
+    NOTE:                    This function is threaded and should not be
+                             initiated by any other than:
+                             send()
 
-              Documentation gathered from:
-              https://people.csail.mit.edu/hubert/pyaudio/docs/#pasampleformat
+                             Documentation gathered from:
+                             https://people.csail.mit.edu/hubert/pyaudio/docs/#pasampleformat
 
     ARGUMENTS:
         - in_data:           -
@@ -80,7 +81,7 @@ def callback(in_data, frame_count, time_info, status):
                              frames of audio data and a flag signifying
                              whether there are more frames to play/record.
 
-    TODO:     None
+    TODO:                    display correct definition of arguments.
     """
 
     data = buffer.stream_to_send[:frame_count]
@@ -107,20 +108,22 @@ def send():
 
     print('output is initiating')
 
-    buffer.streams.append(pa.open(format=pyaudio.paFloat32,
-                                  channels=1,
-                                  rate=int(buffer.args['samplingrate']),
-                                  output=True,
-                                  stream_callback=callback))
+    buffer.streams.append(pa.open(  format = pyaudio.paFloat32,
+                                  channels = 1,
+                                      rate = int(buffer.args['samplingrate']),
+                                    output = True,
+                           stream_callback = callback
+
+                                    ))
 
     print('output stream has been initiated')
 
     Mod = modulate.Modulation(
-                              frequency=buffer.args['frequency'],
-                              samplingrate=buffer.args['samplingrate'],
-                              bitrate=buffer.args['bitrate'],
-                              amplitude=buffer.args['amplitude'],
-                              encoding=buffer.args['encoding'],
+                                 frequency = buffer.args['frequency'],
+                              samplingrate = buffer.args['samplingrate'],
+                                   bitrate = buffer.args['bitrate'],
+                                 amplitude = buffer.args['amplitude'],
+                                  encoding = buffer.args['encoding'],
                               )
 
     print('modulation has been initiated')
@@ -143,6 +146,9 @@ def send():
 
     print('output has been shutdown')
 
+def modulate():
+    pass
+
 # ============== END SEND DATA ====================
 
 
@@ -163,14 +169,37 @@ def receive():
 
     print('input is initiating')
 
-    while buffer.status != False:
-        pass
+    input_stream = pa.open(  format = pyaudio.paFloat32,
+                           channels = 1,
+                               rate = int(buffer.args['samplingrate']),
+                              input = True
+                           )
 
-        # if buffer.status != 'receive':
-        #     stream.stop_stream()
-        #     stream.close()
+    buffer.streams.append(input_stream)
+
+    FPB = 2**10 # 1024 as frames per buffer
+
+    while buffer.status != False:
+        if buffer.status == 'receive':
+            incoming_data = np.frombuffer(input_stream.read(FPB), dtype=np.float32)
+            buffer.buffer_1.extend(incoming_data.tolist())
 
     print('input has been shutdown')
+
+def demodulate():
+
+    print('demodulation is booting')
+
+    while buffer.status != False:
+        if buffer.status == 'receive':
+
+            incoming_data = buffer.buffer_1
+            size = len(incoming_data)
+            # del buffer.buffer_1[:size]
+
+
+
+    pass
 
 # ============== END RECEIVE DATA ================
 
@@ -201,7 +230,7 @@ def parse_arguments():
 
     # Training
     parser.add_argument('--modelpath', default=__path__ + 'src/tmp/', type=str, help='encoding method')
-    parser.add_argument('--batchsize', default=1e3, type=float, help='train size')
+    parser.add_argument('--batchsize', default=1e3, type=int, help='train size')
     parser.add_argument('--snr', default=1.0, type=float, help='signal to noise ratio')
 
     # Miscellanious
@@ -212,7 +241,7 @@ def parse_arguments():
 
     args['path'] = __path__
 
-    buffer.args = args
+    buffer.args.update({**args})
 
     buffer.status = True
 
@@ -274,9 +303,12 @@ def terminate():
 
 if __name__ == '__main__':
 
+
     print('This is a modem')
 
     parse_arguments()
+
+    exit()
 
     run_io_tasks_in_parallel([
                               send,
