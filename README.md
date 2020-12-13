@@ -17,10 +17,6 @@ Theoretical transfer speeds does not directly justify this pure software impleme
 ## Methods
 Methods powering the modem are the following:
 
-* **Deep Temporal Clustering (DTC)** Using Autocorrelation. Developed by **FlorentF9** *(https://github.com/FlorentF9/)* based on [2]:
-
-> Madiraju, N. S., Sadat, S. M., Fisher, D., & Karimabadi, H. (2018). Deep Temporal Clustering : Fully Unsupervised Learning of Time-Domain Features. http://arxiv.org/abs/1802.01059
-
 * **Deep Demodulation** using Tensorflow
 
 * **Deep Segmentation** using Hidden Markov Models
@@ -113,7 +109,5 @@ Special thanks to the following people for making this possible.
 ## References
 
 > [1] In telecommunications, an acoustic coupler is an interface device for coupling electrical signals by acoustical means—usually into and out of a telephone. https://en.wikipedia.org/wiki/Acoustic_coupler
-
-> [2] Madiraju, N. S., Sadat, S. M., Fisher, D., & Karimabadi, H. (2018). Deep Temporal Clustering : Fully Unsupervised Learning of Time-Domain Features. http://arxiv.org/abs/1802.01059
 
 > [3] IEEE 802.11 https://en.wikipedia.org/wiki/IEEE_802.11
