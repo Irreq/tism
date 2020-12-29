@@ -7,7 +7,7 @@
 
 """
 DOCUMENTATION:          Modulation of string or binary sequence to
-                        signal.
+                        amplitude modulated signal.
 
 TODO:                   Add more modulation schemes and comment
                         the program for easier readability.
