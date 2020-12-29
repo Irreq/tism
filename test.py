@@ -1,7 +1,0 @@
-
-foo()
-
-
-def foo():
-
-    return
