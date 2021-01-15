@@ -33,11 +33,10 @@ eps = sys.float_info.epsilon
 
 import numpy as np
 
-import scipy
-
 import sklearn
 import sklearn.svm
 
+import scipy
 from scipy.fftpack import fft
 from scipy.fftpack.realtransforms import dct
 
