@@ -127,7 +127,18 @@ def write_dataset_tofile(dataset, verbose=True):
             filename = f"db/{key}/{num}.wav"
             if verbose:
                 print(f"writing to: {filename}")
-            write(filename, int(FS), audio.astype(np.float32))
+            write(filename, int(FS), audio.astype(np.int16))
+
+            # >>> import numpy as np
+            # >>> from soundfile import SoundFile
+            # >>> myfile = SoundFile('stereo_file.wav')
+            #
+            # Write 10 frames of random data to a new file:
+
+            # >>> with SoundFile('stereo_file.wav', 'w', 44100, 2, 'PCM_24') as f:
+            # >>>     f.write(np.random.randn(10, 2))
+
+
 
     for i in dataset:
         print(f"{i}:{len(dataset[i])}, avg length:{np.mean([len(l) for l in dataset[i]])/FS}")
