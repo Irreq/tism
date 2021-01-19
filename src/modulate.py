@@ -223,20 +223,20 @@ class Modulation(object):
 
     def fsk_modulation(self, payload):
 
-        t = np.arange(0,float(len(payload))/float(self.bitrate),1/float(self.samplingrate), dtype=np.float)
+        numerical_time = np.arange(0,float(len(payload))/float(self.bitrate),1/float(self.samplingrate), dtype=np.float)
         #extend the data_in to account for the bitrate and convert 0/1 to frequency
-        m = np.zeros(0).astype(float)
+        signal_stack = np.zeros(0).astype(float)
         for bit in payload:
             if bit == 0:
-                m=np.hstack((m,np.multiply(np.ones(int(self.samplingrate/self.bitrate)),self.frequency+self.deviation)))
+                signal_stack = np.hstack((signal_stack,np.multiply(np.ones(int(self.samplingrate/self.bitrate)),self.frequency+self.deviation)))
             else:
-                m=np.hstack((m,np.multiply(np.ones(int(self.samplingrate/self.bitrate)),self.frequency-self.deviation)))
+                signal_stack = np.hstack((signal_stack,np.multiply(np.ones(int(self.samplingrate/self.bitrate)),self.frequency-self.deviation)))
         #calculate the output of the VCO
-        y=np.zeros(0)
-        y=self.amplitude * np.cos(2*np.pi*np.multiply(m,t))
+        signal = np.zeros(0)
+        signal = self.amplitude * np.cos(2*np.pi*np.multiply(signal_stack,numerical_time))
 
-        y /= max(abs(y))
+        signal /= max(abs(signal))
 
-        return y
+        return signal
 
 # ================= End Modulation =======================

@@ -1,9 +1,8 @@
 This is the TODO file for the modem.
 
-generate easy modulation
 
 1D clustering segmentation, usage deeplearning.
 
-save everything to buffer
+Integrate windowing function with the CNN model
 
-save results to file
+~~~optimize code~~~

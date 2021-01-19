@@ -148,6 +148,7 @@ def constrained_sum_sample_pos(n, total):
     RETURNS:
         - partitioned:      list() A partition of size 'n' that sums up
                             to 'total'. Eg, [6, 6, 5]
+
     TODO:                   None
     """
 
@@ -172,6 +173,7 @@ def constrained_sum_sample_nonneg(n, total):
     RETURNS:
         - partitioned:      list() A partition of size 'n' that sums up
                             to 'total'. Eg, [7, 4, 6]
+
     TODO:                   None
     """
 
@@ -183,6 +185,7 @@ def partion_n_times(n, total):
 
     """
     Integer partitioning of same size.
+    
     NOTE:                   If mod(total, n) != 0, then some partions will
                             be of larger size, but together sum up to total.
     ARGUMENTS:
@@ -193,6 +196,7 @@ def partion_n_times(n, total):
     RETURNS:
         - partitioned:      list() A partition of size 'n' that sums up
                             to 'total'. Eg, [7, 4, 6]
+
     TODO:                   None
     """
 

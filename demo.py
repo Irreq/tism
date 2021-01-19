@@ -128,29 +128,40 @@ def write_dataset_tofile(dataset, verbose=True):
             filename = f"db/{key}/{num}.wav"
             if verbose:
                 print(f"writing to: {filename}")
-            # write(filename, int(FS), audio.astype(np.int16))
-
-
-
-            # data, samplerate = soundfile.read('old.wav')
+            # write(filename, int(FS), audio.astype(np.float32))
             soundfile.write(filename, audio, int(FS), subtype='PCM_16')
-
-            # >>> import numpy as np
-            # >>> from soundfile import SoundFile
-            # >>> myfile = SoundFile('stereo_file.wav')
-            #
-            # Write 10 frames of random data to a new file:
-
-            # >>> with SoundFile('stereo_file.wav', 'w', 44100, 2, 'PCM_24') as f:
-            # >>>     f.write(np.random.randn(10, 2))
-
-
 
     for i in dataset:
         print(f"{i}:{len(dataset[i])}, avg length:{np.mean([len(l) for l in dataset[i]])/FS}")
+
+
+def gen(tag):
+
+    signal = mod.fsk_modulation(tag) # FSK modulated data
+
+    X = np.zeros(np.random.randint(200,300)).tolist() # add random padding for synthetic dataset
+
+    X.extend(signal) # extend the data
+
+    X.extend(np.zeros(np.random.randint(200, 300)).tolist()) # add random padding for synthetic dataset
+
+    signal = addnoise(np.array(X)) # add noise to the signal, only necessary for synthetic dataset
+
+    return signal
+
 
 if __name__ == "__main__":
 
     complete_dataset = generate(number_of_training_files)
 
     write_dataset_tofile(complete_dataset)
+
+    """
+    data_dir = pathlib.Path('data/db')
+    if not data_dir.exists():
+      tf.keras.utils.get_file(
+          'db.zip',
+          origin="https://github.com/Irreq/tism/raw/main/db.zip",
+          extract=True,
+          cache_dir='.', cache_subdir='data')
+    """

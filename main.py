@@ -9,8 +9,7 @@
 DOCUMENTATION:          I propose a deep learning method for
                         asynchronus demodulation of AM signals.
 
-TODO:                   Implement the CNN and fix the core of
-                        modem.
+TODO:                   See: 'TODO.txt'.
 """
 
 __author__ = "Isac Bruce"
@@ -24,7 +23,6 @@ __status__ = "Development"
 
 
 import sys, os
-
 
 import pyaudio
 
