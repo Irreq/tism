@@ -229,3 +229,37 @@ def genset():
     # data_y = data_y.map({'0':0, '1':1, '00':2, '11':3}).values
 
     return data_x, data_y
+
+def generate_dataset_for_folder(n):
+
+    scheme = buffer.args['scheme']
+
+    data_x = []
+
+    data_y = []
+
+    M = Modulation(frequency=2e3, bitrate=50)
+
+    for i in range(n):
+
+        tag = np.random.choice(list(scheme.keys()))
+
+        data_y.append(tag)
+
+        signal = M.modulate(scheme[tag])
+
+        # print(np.zeros(np.random.randint(50, 1000)).tolist())
+
+        result = np.zeros(np.random.randint(50,100)).tolist()
+
+        result.extend(signal)
+
+        result.extend(np.zeros(np.random.randint(50, 100)).tolist())
+
+        signal = np.array(result)
+
+        # signal = add_white_noise(signal, np.random.choice(bias))
+
+        data_x.append(np.float32(signal))
+
+    return data_x, data_y
