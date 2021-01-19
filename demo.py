@@ -7,6 +7,11 @@ from scipy import signal
 from scipy.fft import fftshift
 import matplotlib.pyplot as plt
 
+from scipy.io.wavfile import write
+
+
+import os
+
 # This is the string that will be generated
 test_string = "Hello, World!"
 test_string = [1, 0, 1, 0, 1, 1, 0, 1, 1]
@@ -14,19 +19,21 @@ test_string = [1, 0, 1, 0, 1, 1, 0, 1, 1]
 # The path to save to
 save_path = "demo/"
 
+path = r"db"
+
 FREQUENCY = 2e3
 BITRATE = 30
 FS = 44.1e3
-NOICE_INDEX = 0.000001
+NOISE_INDEX = 0.000001
+
+number_of_training_files = 1000
 
 mod = modulate.Modulation(frequency=FREQUENCY, samplingrate=FS, bitrate=BITRATE)
 
 carrier = mod.modulate(test_string)
 
-# Generate a test signal, a 2 Vrms sine wave whose frequency is slowly modulated around 3kHz, corrupted by white noise of exponentially decreasing magnitude sampled at 10 kHz.
-
 def addnoise(carrier):
-    noise_power = NOICE_INDEX * FS / 2
+    noise_power = NOISE_INDEX * FS / 2
     time = np.arange(len(carrier)) / float(FS)
     noise = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
     noise *= np.exp(-time/5)
@@ -34,7 +41,15 @@ def addnoise(carrier):
     combined /= max(abs(combined))
     return combined
 
+def append_noise(carrier):
+    noise = (np.random.randn(len(y))+1)*A_n
+    snr = 10*np.log10(np.mean(np.square(y)) / np.mean(np.square(noise)))
+    print("SNR = %fdB" % snr)
+    y=np.add(y,noise)
+
 def test_compuation(carrier_, FS=FS):
+
+    # test_compuation(test_audio)
 
     # Compute and plot the spectrogram.
 
@@ -55,7 +70,9 @@ def generate(n):
 
         tag = np.random.choice(list(scheme.keys()))
 
-        signal = mod.modulate(scheme[tag]) # modulated data
+        # signal = mod.modulate(scheme[tag]) # AM modulated data
+
+        signal = mod.fsk_modulation(scheme[tag]) # FSK modulated data
 
         X = np.zeros(np.random.randint(200,300)).tolist() # add random padding for synthetic dataset
 
@@ -64,71 +81,59 @@ def generate(n):
         X.extend(np.zeros(np.random.randint(200, 300)).tolist()) # add random padding for synthetic dataset
 
         signal = addnoise(np.array(X)) # add noise to the signal, only necessary for synthetic dataset
-        # signal = signal.tolist().extend(np.zeros(np.random.randint(50, 100)).tolist())
-        signal = np.float32(signal) # convert to correct format
 
         dataset[tag].append(signal) # append to dataset
 
     return dataset
 
+def write_dataset_tofile(dataset, verbose=True):
 
+    for key in dataset.keys():
+        new_path = path + "/" + key
+        try:
+            os.mkdir(new_path)
+        except OSError:
+            if verbose:
+                print(f"Creation of the directory {new_path} failed. It probably already exists.")
+        else:
+            if verbose:
+                print(f"Successfully created the directory {new_path}")
 
+    folders = {}
 
-dataset = generate(10)
+    for folder in os.listdir(path):
+        if os.path.isdir(os.path.join(path, folder)):
+            folders[folder] = [files for files in os.listdir(path+"/"+folder)]
 
-for i in dataset:
-    print(f"{i}:{len(dataset[i])}, avg length:{np.mean([len(l) for l in dataset[i]])/FS}")
-
-test_audio = dataset['0'][0]
-# plt.plot(test_audio)
-# spectrum2-D array
-#
-#     Columns are the periodograms of successive segments.
-# freqs1-D array
-#
-#     The frequencies corresponding to the rows in spectrum.
-# t1-D array
-#
-#     The times corresponding to midpoints of segments (i.e., the columns in spectrum).
-spectrum2d, freqs1d, t1, im = plt.specgram(test_audio)
-print()
-# plt.plot(spectrum2d, freqs1d)
-#
-# plt.show()
-
-def sort_numerical():
     def sort_int(examp):
         pos = 1
         while examp[:pos].isdigit():
             pos += 1
         return examp[:pos-1] if pos > 1 else examp
 
-    sorted(files, key=sort_int)
 
-from scipy.io.wavfile import write
+    tags = {}
+    for sub_folder in folders:
+        try:
+            index = sorted(folders[sub_folder], key=sort_int)[-1] # sorts files in directory in numerical order
+            tags[sub_folder] = int(index.split(".")[0]) # tries to get the integer name
+        except:
+            tags[sub_folder] = 0
 
-samplerate = 44100; fs = 100
+    for key in dataset:
+        for audio in dataset[key]:
+            num = tags[key]
+            tags[key] += 1
+            filename = f"db/{key}/{num}.wav"
+            if verbose:
+                print(f"writing to: {filename}")
+            write(filename, int(FS), audio.astype(np.float32))
 
-t = np.linspace(0., 1., samplerate)
+    for i in dataset:
+        print(f"{i}:{len(dataset[i])}, avg length:{np.mean([len(l) for l in dataset[i]])/FS}")
 
-amplitude = np.iinfo(np.int16).max
+if __name__ == "__main__":
 
-data = amplitude * np.sin(2. * np.pi * fs * t)
+    complete_dataset = generate(number_of_training_files)
 
-tag = "0"
-data = dataset[tag][-1] # the last element
-
-tags = {i:0 for i in dataset.keys()}
-
-print(num)
-
-# write(".db/"+tag+"/"+num+".wav", FS, data.astype(np.float32))
-
-for key in dataset:
-    for audio in dataset[key]:
-        num = tags[key]
-        tags[key] += 1
-        write(".db/"+key+"/"+num+".wav", FS, data.astype(np.float32))
-
-
-# test_compuation(test_audio)
+    write_dataset_tofile(complete_dataset)

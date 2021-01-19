@@ -23,8 +23,7 @@ from .encoding import str_to_bin
 
 class Modulation(object):
 
-    def __init__(self, frequency=1e3, samplingrate=44.1e3,
-                        bitrate=10, amplitude=1.0, encoding=True):
+    def __init__(self, frequency=1e3, samplingrate=44.1e3, bitrate=10, amplitude=1.0, deviation=500, encoding=True):
 
         """
         Class for data modulation.
@@ -55,6 +54,10 @@ class Modulation(object):
                                  occur in the physical world. Amplitude is
                                  usually 0 <= amplitude <= 1. Eg, 0.9
 
+            - deviation:         int() or float() representing the frequency
+                                 deviation from the carrier frequency. Let
+                                 it be greater than bitrate. Eg, 500
+
             - encoding:          str() or Boolean() representing the
                                  encoding scheme that will be used for
                                  the modulation. If encoding is set to True
@@ -70,8 +73,11 @@ class Modulation(object):
         assert float(samplingrate) > 2 * frequency, "Insufficient Nyquist rate"
         self.samplingrate = samplingrate
 
-        assert float(bitrate) > 0
+        assert float(bitrate) > 0, "Bitrate must be higher than 0"
         self.bitrate = bitrate
+
+        assert float(deviation) > bitrate, "frequency deviation, make higher than bitrate"
+        self.deviation = deviation
 
         assert 0 <= amplitude <= 1, "Amplitude is out of boundaries."
         self.amplitude = amplitude
@@ -99,7 +105,7 @@ class Modulation(object):
                                  and not only in seconds.
         """
 
-        # Generates from 0 to 1/Fbit with steps from fs
+        # Generates from 0 to 1/self.bitrate with steps from fs
 
         timesteps = np.arange(0, duration, 1/self.samplingrate, dtype=np.float)
 
@@ -213,5 +219,24 @@ class Modulation(object):
         carrier /= max(abs(carrier))
 
         return carrier
+
+
+    def fsk_modulation(self, payload):
+
+        t = np.arange(0,float(len(payload))/float(self.bitrate),1/float(self.samplingrate), dtype=np.float)
+        #extend the data_in to account for the bitrate and convert 0/1 to frequency
+        m = np.zeros(0).astype(float)
+        for bit in payload:
+            if bit == 0:
+                m=np.hstack((m,np.multiply(np.ones(int(self.samplingrate/self.bitrate)),self.frequency+self.deviation)))
+            else:
+                m=np.hstack((m,np.multiply(np.ones(int(self.samplingrate/self.bitrate)),self.frequency-self.deviation)))
+        #calculate the output of the VCO
+        y=np.zeros(0)
+        y=self.amplitude * np.cos(2*np.pi*np.multiply(m,t))
+
+        y /= max(abs(y))
+
+        return y
 
 # ================= End Modulation =======================
