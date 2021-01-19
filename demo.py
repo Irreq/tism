@@ -2,6 +2,7 @@ from src import modulate, cfg
 scheme = cfg.args['scheme']
 
 import numpy as np
+import soundfile
 
 from scipy import signal
 from scipy.fft import fftshift
@@ -127,7 +128,12 @@ def write_dataset_tofile(dataset, verbose=True):
             filename = f"db/{key}/{num}.wav"
             if verbose:
                 print(f"writing to: {filename}")
-            write(filename, int(FS), audio.astype(np.int16))
+            # write(filename, int(FS), audio.astype(np.int16))
+
+
+
+            # data, samplerate = soundfile.read('old.wav')
+            soundfile.write(filename, audio, int(FS), subtype='PCM_16')
 
             # >>> import numpy as np
             # >>> from soundfile import SoundFile
