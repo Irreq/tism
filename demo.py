@@ -25,15 +25,17 @@ path = r"db"
 FREQUENCY = 2e3
 BITRATE = 30
 FS = 44.1e3
-NOISE_INDEX = 0.000001
+# NOISE_INDEX = 0.000001
+NOISE_INDEX = 0.0001
 
-number_of_training_files = 1000
+number_of_training_files = 2000
 
 mod = modulate.Modulation(frequency=FREQUENCY, samplingrate=FS, bitrate=BITRATE)
 
 carrier = mod.modulate(test_string)
 
 def addnoise(carrier):
+    NOISE_INDEX = np.random.random() / 1000
     noise_power = NOISE_INDEX * FS / 2
     time = np.arange(len(carrier)) / float(FS)
     noise = np.random.normal(scale=np.sqrt(noise_power), size=time.shape)
