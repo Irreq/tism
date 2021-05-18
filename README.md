@@ -1,3 +1,5 @@
+# Warning network is missing and will not work.
+
 # Modem
 
 Time-independent softmodem - tism
