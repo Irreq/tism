@@ -1,4 +1,4 @@
-# Warning network is missing and will not work.
+# Warning some code is broken and the program will not work at the moment.
 
 # Modem
 
